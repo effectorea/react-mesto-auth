@@ -14,6 +14,7 @@ import { Switch, useHistory } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
+import * as auth from '../utils/Auth';
 
 function App() {
   const history = useHistory();
@@ -29,15 +30,33 @@ function App() {
   const [email, setEmail] = useState('');
 
   useEffect(() => {
+    if (localStorage.getItem('jwt')) {
+      const jwt = localStorage.getItem('jwt');
+      auth.checkToken(jwt)
+      .then((res) => {
+        if (res) {
+        setEmail(res.email);
+        setLoggedIn(true);
+        history.push('/');
+      }
+      })
+      .catch(err => console.log(err))
+    }
+  }, [history])
+  
+  
+  useEffect(() => {
+    if (loggedIn) {
     api
       .getCards()
       .then((res) => {
         setCards(res);
       })
-      
-  }, []);
+    } 
+  }, [loggedIn]);
 
   useEffect(() => {
+    if (loggedIn) {
     api
       .getUserInfo()
       .then((res) => {
@@ -46,7 +65,8 @@ function App() {
       .catch((err) => {
         console.log(`Ошибка при загрузке данных пользователя ${err}`);
       });
-  }, []);
+    }
+  }, [loggedIn]);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -129,17 +149,45 @@ function App() {
         console.log(`Ошибка при загрузке карточки ${err}`);
       });
   }
-  function handleRegistration() {}
+  function handleRegistration({ email, password }) {
+    auth.register(email, password)
+    .then((res) => {
+      if (res) {
 
-  function handleLoggingIn() {}
+        history.push('/sign-in');
+      }
+    })
+    .catch((err) => console.log(err));
+  }
 
-  function handleExit() {}
+  function handleLoggingIn({ email, password }) {
+    auth.login(email, password)
+      .then(res => {
+        if (res.token) {
+          setEmail(email);
+          setLoggedIn(true);
+          localStorage.setItem('jwt', res.token);
+          history.push('/');
+        }
+      })
+      .catch(err => {
+
+        console.log(err);
+      })
+  }
+
+  function handleSignOut() {
+    localStorage.removeItem('jwt');
+    history.push('/sign-in');
+    setEmail('');
+    setLoggedIn(false);
+  }
 
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
-          <Header email={email} onExit={handleExit} />
+          <Header email={email} onSignOut={handleSignOut} />
           <Switch>
             <ProtectedRoute
               exact path="/"
