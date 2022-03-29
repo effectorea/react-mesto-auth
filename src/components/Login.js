@@ -53,7 +53,7 @@ function Login ({ onLogin }) {
             required
           />
         </label>
-        <button datatype="loginButton" className="register__button">Войти</button>
+        <button className="register__button">Войти</button>
       </form>
     </div>
   );

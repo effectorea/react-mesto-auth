@@ -43,7 +43,7 @@ function Main({
           ></button>
         </section>
         <section className="elements">
-{/*           {cards.map((element) => {
+          {cards && cards.map((element) => {
             return (
               <Card
                 card={element}
@@ -53,7 +53,7 @@ function Main({
                 onCardDelete={onCardDelete}
               />
             );
-          })} */}
+          })}
         </section>
       </main>
     </div>

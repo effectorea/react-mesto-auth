@@ -33,9 +33,7 @@ function App() {
       .then((res) => {
         setCards(res);
       })
-      .catch((err) => {
-        console.log(`Ошибка при загрузке данных ${err}`);
-      });
+      
   }, []);
 
   useEffect(() => {
@@ -130,8 +128,9 @@ function App() {
         console.log(`Ошибка при загрузке карточки ${err}`);
       });
   }
-
   function handleRegistration() {}
+
+  function handleLoggingIn() {}
 
   return (
     <div className="App">
@@ -155,10 +154,9 @@ function App() {
               <Register onRegister={handleRegistration} />
             </Route>
             <Route path="/sign-in">
-              <Login />
+              <Login onLogin={handleLoggingIn}/>
             </Route>
           </Switch>
-          <Main />
           <Footer />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
