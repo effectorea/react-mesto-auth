@@ -35,7 +35,7 @@ function App() {
       auth.checkToken(jwt)
       .then((res) => {
         if (res) {
-        setEmail(res.email);
+        setEmail(res.res.email);
         setLoggedIn(true);
         history.push('/');
       }
@@ -157,7 +157,10 @@ function App() {
         history.push('/sign-in');
       }
     })
-    .catch((err) => console.log(err));
+    .catch(err => {
+      //вставить тултип сюда
+      console.log(err);
+    })
   }
 
   function handleLoggingIn({ email, password }) {
@@ -171,7 +174,7 @@ function App() {
         }
       })
       .catch(err => {
-
+        //вставить тултип сюда
         console.log(err);
       })
   }

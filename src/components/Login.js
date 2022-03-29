@@ -33,6 +33,8 @@ function Login ({ onLogin }) {
           <input
             className="register__input"
             placeholder="Email"
+            minLength="3"
+            maxLength="20"
             id="loginEmail"
             name="email"
             type="email"
@@ -45,6 +47,8 @@ function Login ({ onLogin }) {
           <input
             className="register__input"
             placeholder="Пароль"
+            minLength="3"
+            maxLength="15"
             id="loginPassword"
             name="password"
             type="password"

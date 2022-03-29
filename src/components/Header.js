@@ -19,7 +19,7 @@ function Header({ email, onSignOut }) {
               Регистрация
             </Link>
           </Route>
-          <Route path="/main">
+          <Route exact path="/">
             <div>
               <span className="header__email">{email}</span>
               <Link className="header__link" to="/sign-in" onClick={onSignOut}>

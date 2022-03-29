@@ -34,6 +34,8 @@ function Register({ onRegister }) {
           <input
             className="register__input"
             placeholder="Email"
+            minLength="3"
+            maxLength="40"
             id="registerEmail"
             name="email"
             type="email"
@@ -46,6 +48,8 @@ function Register({ onRegister }) {
           <input
             className="register__input"
             placeholder="Пароль"
+            minLength="3"
+            maxLength="15"
             id="registerPassword"
             name="password"
             type="password"

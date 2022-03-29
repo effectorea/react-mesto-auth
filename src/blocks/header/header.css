@@ -24,6 +24,7 @@
 @media screen and (max-width: 610px) {
   .header {
     max-width: 420px;
+    flex-direction: column-reverse;
   }
 }
 
@@ -31,5 +32,6 @@
   .header {
     max-width: 100%;
     padding-left: 27px;
+    flex-direction: column-reverse;
   }
 }
