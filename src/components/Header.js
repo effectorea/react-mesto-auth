@@ -2,11 +2,8 @@ import React from "react";
 import headerLogo from "../images/logo.svg";
 import { Route, Switch, Link } from "react-router-dom";
 
-function Header({ email }) {
+function Header({ email, onExit }) {
 
-  function signOut() {
-    localStorage.removeItem('token');
-}
   return (
     <div>
       <header className="header">
@@ -25,7 +22,7 @@ function Header({ email }) {
           <Route path="/main">
             <div>
               <span className="header__email">{email}</span>
-              <Link className="header__link" to="/sign-in" onClick={signOut}>
+              <Link className="header__link" to="/sign-in" onClick={onExit}>
                 Выйти
               </Link>
             </div>

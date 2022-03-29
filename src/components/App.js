@@ -26,6 +26,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     api
@@ -132,11 +133,13 @@ function App() {
 
   function handleLoggingIn() {}
 
+  function handleExit() {}
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
-          <Header />
+          <Header email={email} onExit={handleExit} />
           <Switch>
             <ProtectedRoute
               exact path="/"
