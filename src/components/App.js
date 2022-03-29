@@ -9,8 +9,14 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import PopupWithConfirm from "./PopupWithConfirm";
+import { Route } from "react-router-dom";
+import { Switch, useHistory } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import Register from "./Register";
+import Login from "./Login";
 
 function App() {
+  const history = useHistory();
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -19,6 +25,7 @@ function App() {
   const [deletedCard, setDeletedCard] = useState(null);
   const [cards, setCards] = useState([]);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     api
@@ -124,20 +131,34 @@ function App() {
       });
   }
 
+  function handleRegistration() {}
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
           <Header />
-          <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleConfirmationClick}
-          />
+          <Switch>
+            <ProtectedRoute
+              exact path="/"
+              component={Main}
+              loggedIn={loggedIn}
+              cards={cards}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              onCardClick={handleCardClick}
+              onCardLike={handleCardLike}
+              onCardDelete={handleConfirmationClick}
+            />
+            <Route path="/sign-up">
+              <Register onRegister={handleRegistration} />
+            </Route>
+            <Route path="/sign-in">
+              <Login />
+            </Route>
+          </Switch>
+          <Main />
           <Footer />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
