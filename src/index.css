@@ -55,4 +55,6 @@
 @import url(./blocks/popup/__content/popup__content.css);
 @import url(./blocks/popup/__image/popup__image.css);
 @import url(./blocks/popup/__place-name/popup__place-name.css);
+@import url(./blocks/popup/__status/popup__status.css);
+@import url(./blocks/popup/__title-status/popup__title-status.css)
 

@@ -14,7 +14,8 @@ import { Switch, useHistory } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Login from "./Login";
-import * as auth from '../utils/Auth';
+import * as auth from "../utils/Auth";
+import InfoTooltip from "./infoTooltip";
 
 function App() {
   const history = useHistory();
@@ -27,44 +28,44 @@ function App() {
   const [cards, setCards] = useState([]);
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [status, setStatus] = useState();
 
   useEffect(() => {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
-      auth.checkToken(jwt)
-      .then((res) => {
-        if (res) {
-        setEmail(res.res.email);
-        setLoggedIn(true);
-        history.push('/');
-      }
-      })
-      .catch(err => console.log(err))
+    if (localStorage.getItem("jwt")) {
+      const jwt = localStorage.getItem("jwt");
+      auth
+        .checkToken(jwt)
+        .then((res) => {
+          if (res) {
+            setEmail(res.res.email);
+            setLoggedIn(true);
+            history.push("/");
+          }
+        })
+        .catch((err) => console.log(err));
     }
-  }, [history])
-  
-  
+  }, [history]);
+
   useEffect(() => {
     if (loggedIn) {
-    api
-      .getCards()
-      .then((res) => {
+      api.getCards().then((res) => {
         setCards(res);
-      })
-    } 
+      });
+    }
   }, [loggedIn]);
 
   useEffect(() => {
     if (loggedIn) {
-    api
-      .getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
-      })
-      .catch((err) => {
-        console.log(`Ошибка при загрузке данных пользователя ${err}`);
-      });
+      api
+        .getUserInfo()
+        .then((res) => {
+          setCurrentUser(res);
+        })
+        .catch((err) => {
+          console.log(`Ошибка при загрузке данных пользователя ${err}`);
+        });
     }
   }, [loggedIn]);
 
@@ -86,6 +87,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard(null);
     setIsConfirmationPopupOpen(false);
+    setIsInfoTooltipOpen(false);
   };
 
   const handleUpdateUser = (info) => {
@@ -150,39 +152,43 @@ function App() {
       });
   }
   function handleRegistration({ email, password }) {
-    auth.register(email, password)
-    .then((res) => {
-      if (res) {
-
-        history.push('/sign-in');
-      }
-    })
-    .catch(err => {
-      //вставить тултип сюда
-      console.log(err);
-    })
+    auth
+      .register(email, password)
+      .then((res) => {
+        if (res) {
+          setIsInfoTooltipOpen(true);
+          setStatus(true);
+          history.push("/sign-in");
+        }
+      })
+      .catch((err) => {
+        setIsInfoTooltipOpen(false);
+        console.log(err);
+      });
   }
 
   function handleLoggingIn({ email, password }) {
-    auth.login(email, password)
-      .then(res => {
+    auth
+      .login(email, password)
+      .then((res) => {
         if (res.token) {
           setEmail(email);
           setLoggedIn(true);
-          localStorage.setItem('jwt', res.token);
-          history.push('/');
+          localStorage.setItem("jwt", res.token);
+          history.push("/");
         }
       })
-      .catch(err => {
-        //вставить тултип сюда
+      .catch((err) => {
+        setIsInfoTooltipOpen(true);
+        setStatus(false);
         console.log(err);
-      })
+      });
   }
 
   function handleSignOut() {
-    localStorage.removeItem('jwt');
-    history.push('/sign-in');
-    setEmail('');
+    localStorage.removeItem("jwt");
+    history.push("/sign-in");
+    setEmail("");
     setLoggedIn(false);
   }
 
@@ -193,7 +199,8 @@ function App() {
           <Header email={email} onSignOut={handleSignOut} />
           <Switch>
             <ProtectedRoute
-              exact path="/"
+              exact
+              path="/"
               component={Main}
               loggedIn={loggedIn}
               cards={cards}
@@ -208,7 +215,7 @@ function App() {
               <Register onRegister={handleRegistration} />
             </Route>
             <Route path="/sign-in">
-              <Login onLogin={handleLoggingIn}/>
+              <Login onLogin={handleLoggingIn} />
             </Route>
           </Switch>
           <Footer />
@@ -237,6 +244,12 @@ function App() {
           />
 
           <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+
+          <InfoTooltip
+            status={status}
+            onClose={closeAllPopups}
+            isOpen={isInfoTooltipOpen}
+          />
         </div>
       </CurrentUserContext.Provider>
     </div>
