@@ -25,6 +25,7 @@
   .header {
     max-width: 420px;
     flex-direction: column-reverse;
+    gap: 30px;
   }
 }
 

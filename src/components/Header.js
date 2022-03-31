@@ -20,7 +20,7 @@ function Header({ email, onSignOut }) {
             </Link>
           </Route>
           <Route exact path="/">
-            <div>
+            <div className="header__twin">
               <span className="header__email">{email}</span>
               <Link className="header__link" to="/sign-in" onClick={onSignOut}>
                 Выйти

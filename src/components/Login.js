@@ -27,7 +27,6 @@ function Login ({ onLogin }) {
         className="register__form"
         name="registrationForm"
         action="#"
-        noValidate
       >
         <label htmlFor="email" className="register__label">
           <input

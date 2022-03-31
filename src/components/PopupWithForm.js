@@ -9,17 +9,20 @@ function PopupWithForm({
   buttonText = "Сохранить",
   onSubmit,
 }) {
-  const handleEscClose = (e) => {
-    if (
-      e.key === "Escape" ||
-      e.target.classList.contains("popup__close") ||
-      e.target.classList.contains("popup_opened")
-    ) {
-      onClose(e);
-    }
-  };
+  
 
   useEffect(() => {
+
+    const handleEscClose = (e) => {
+      if (
+        e.key === "Escape" ||
+        e.target.classList.contains("popup__close") ||
+        e.target.classList.contains("popup_opened")
+      ) {
+        onClose(e);
+      }
+    };
+
     if (isOpen) {
       document.addEventListener("keydown", handleEscClose);
       document.addEventListener("mousedown", handleEscClose);
@@ -28,7 +31,7 @@ function PopupWithForm({
         document.removeEventListener("mousedown", handleEscClose);
       };
     }
-  });
+  }, [isOpen, onClose]);
 
   return (
     <div>
@@ -45,7 +48,6 @@ function PopupWithForm({
             name={name}
             action="#"
             className="popup__form"
-            noValidate
           >
             {children}
             <button type="submit" className="popup__save-btn">

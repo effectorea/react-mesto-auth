@@ -30,11 +30,11 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-  const [status, setStatus] = useState();
+  const [status, setStatus] = useState(true);
 
   useEffect(() => {
-    if (localStorage.getItem("jwt")) {
-      const jwt = localStorage.getItem("jwt");
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
       auth
         .checkToken(jwt)
         .then((res) => {
@@ -42,6 +42,8 @@ function App() {
             setEmail(res.res.email);
             setLoggedIn(true);
             history.push("/");
+          } else {
+            localStorage.removeItem(jwt);
           }
         })
         .catch((err) => console.log(err));
@@ -53,19 +55,12 @@ function App() {
       api.getCards().then((res) => {
         setCards(res);
       });
-    }
-  }, [loggedIn]);
-
-  useEffect(() => {
-    if (loggedIn) {
       api
         .getUserInfo()
         .then((res) => {
           setCurrentUser(res);
         })
-        .catch((err) => {
-          console.log(`Ошибка при загрузке данных пользователя ${err}`);
-        });
+        .catch((err) => console.log(`Ошибка при загрузке данных ${err}`));
     }
   }, [loggedIn]);
 
@@ -162,7 +157,8 @@ function App() {
         }
       })
       .catch((err) => {
-        setIsInfoTooltipOpen(false);
+        setIsInfoTooltipOpen(true);
+        setStatus(false);
         console.log(err);
       });
   }
